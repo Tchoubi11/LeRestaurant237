@@ -25,9 +25,9 @@ class Commande
     #[ORM\Column]
     private ?\DateTime $dateCommande = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?menu $menu = null;
+    private ?Menu $menu = null;
 
     public function getId(): ?int
     {
@@ -82,15 +82,15 @@ class Commande
         return $this;
     }
 
-    public function getMenu(): ?menu
-    {
-        return $this->menu;
-    }
+    public function getMenu(): ?Menu
+   {
+    return $this->menu;
+   }
 
-    public function setMenu(?menu $menu): static
-    {
-        $this->menu = $menu;
+   public function setMenu(?Menu $menu): static
+   {
+    $this->menu = $menu;
 
-        return $this;
-    }
+    return $this;
+   }
 }
