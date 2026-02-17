@@ -2,45 +2,66 @@
 
 {% block body %}
 
-<div class="text-center mb-5">
-    <h1 class="display-4 fw-bold">Bienvenue chez Vite & Gourmand</h1>
-    <p class="lead">25 ans d'expérience culinaire à Bordeaux</p>
-</div>
-
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <h2 class="card-title">Notre entreprise</h2>
-        <p>
-            Depuis 25 ans à Bordeaux, Julie et José proposent
-            des menus gastronomiques pour tous vos événements.
-        </p>
+<!-- HERO SECTION -->
+<div class="hero">
+    <div class="container">
+        <h1>Vite & Gourmand</h1>
+        <p class="lead">Le goût authentique, rapidement.</p>
+        <a href="{{ path('app_menus') }}" class="btn btn-primary btn-lg mt-3">
+            Voir nos menus
+        </a>
     </div>
 </div>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <h2 class="card-title">Notre professionnalisme</h2>
-        <p>
-            Une équipe passionnée, des produits frais,
-            un service rapide et de qualité.
-        </p>
+<!-- INTRO -->
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Bienvenue chez Vite & Gourmand</h1>
+        <p class="lead">25 ans d'expérience culinaire à Bordeaux</p>
     </div>
-</div>
 
-<h2 class="mb-3">Avis clients</h2>
+    <!-- ENTREPRISE -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Notre entreprise</h2>
+            <p>
+                Depuis 25 ans à Bordeaux, Julie et José proposent
+                des menus gastronomiques pour tous vos événements.
+            </p>
+        </div>
+    </div>
 
-<div class="row">
-    {% for avis in avis %}
-        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">{{ avis.nom }}</h5>
-                    <p class="card-text">{{ avis.contenu }}</p>
-                    <span class="badge bg-success">Note : {{ avis.note }}/5</span>
+    <!-- PROFESSIONNALISME -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Notre professionnalisme</h2>
+            <p>
+                Une équipe passionnée, des produits frais,
+                un service rapide et de qualité.
+            </p>
+        </div>
+    </div>
+
+    <!-- AVIS CLIENTS -->
+    <h2 class="mb-3">Avis clients</h2>
+
+    <div class="row">
+        {% for avis in avis %}
+            <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ avis.nom }}</h5>
+                        <p class="card-text">{{ avis.contenu }}</p>
+                        <span class="badge bg-success">Note : {{ avis.note }}/5</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% else %}
+            <p>Aucun avis pour le moment.</p>
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}
