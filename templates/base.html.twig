@@ -1,27 +1,66 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Vite & Gourmand{% endblock %}</title>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍽️</text></svg>">
+           <title>{% block title %}Vite & Gourmand{% endblock %}</title>
 
-        {% block stylesheets %}
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        {% endblock %}
+           <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍽️</text></svg>">
+
+    {% block stylesheets %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% endblock %}
     </head>
 
-    <body class="bg-light">
+        <body class="bg-light">
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/">Vite & Gourmand</a>
-                <div>
-                    <a class="btn btn-outline-light me-2" href="/">Accueil</a>
-                    <a class="btn btn-warning" href="/commande">Commander</a>
-                </div>
-            </div>
-        </nav>
+        <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">Vite & Gourmand</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_menus') }}">Nos Menus</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_contact') }}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_privacy') }}">
+                      Politique de confidentialité
+                    </a>
+                </li>
+
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{{ path('app_logout') }}">
+                            Déconnexion ({{ app.user.userIdentifier }})
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-success" href="{{ path('app_login') }}">
+                            Connexion
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>
 
         <div class="container mt-5">
             {% block body %}{% endblock %}
@@ -30,5 +69,61 @@
         {% block javascripts %}
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         {% endblock %}
+
+        <footer class="bg-dark text-white mt-5 pt-4 pb-3">
+    <div class="container">
+        <div class="row">
+
+            <!-- Horaires -->
+            <div class="col-md-4 mb-3">
+                <h5>Horaires</h5>
+                <ul class="list-unstyled">
+                    <li>Lundi : 11h00 - 22h00</li>
+                    <li>Mardi : 11h00 - 22h00</li>
+                    <li>Mercredi : 11h00 - 22h00</li>
+                    <li>Jeudi : 11h00 - 22h00</li>
+                    <li>Vendredi : 11h00 - 23h00</li>
+                    <li>Samedi : 11h00 - 23h00</li>
+                    <li>Dimanche : 12h00 - 21h00</li>
+                </ul>
+            </div>
+
+            <!-- Liens utiles -->
+            <div class="col-md-4 mb-3">
+                <h5>Informations</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="{{ path('app_legal') }}" class="text-white text-decoration-none">
+                            Mentions légales
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_cgv') }}" class="text-white text-decoration-none">
+                            Conditions Générales de Vente
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_privacy') }}" class="text-white text-decoration-none">
+                            Politique de confidentialité
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Infos -->
+            <div class="col-md-4 mb-3">
+                <h5>Vite & Gourmand</h5>
+                <p>Restaurant rapide & gourmand.</p>
+            </div>
+
+        </div>
+
+        <hr class="bg-light">
+
+        <div class="text-center">
+            <small>© {{ "now"|date("Y") }} Vite & Gourmand - Tous droits réservés</small>
+        </div>
+    </div>
+</footer>
     </body>
 </html>
