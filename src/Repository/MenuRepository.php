@@ -16,6 +16,28 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
+
+    public function filterMenus($maxPrice, $theme, $regime): array
+{
+    $qb = $this->createQueryBuilder('m');
+
+    if ($maxPrice) {
+        $qb->andWhere('m.prix <= :price')
+           ->setParameter('price', $maxPrice);
+    }
+
+    if ($theme) {
+        $qb->andWhere('m.theme = :theme')
+           ->setParameter('theme', $theme);
+    }
+
+    if ($regime) {
+        $qb->andWhere('m.regime = :regime')
+           ->setParameter('regime', $regime);
+    }
+
+    return $qb->getQuery()->getResult();
+}
     //    /**
     //     * @return Menu[] Returns an array of Menu objects
     //     */
