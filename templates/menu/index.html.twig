@@ -5,53 +5,125 @@
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Nos Menus</h1>
 
-    <div class="row">
+    {# 🔎 FILTRE PRIX #}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select id="priceFilter" class="form-select">
+                <option value="">Filtrer par prix maximum</option>
+                <option value="20">20 €</option>
+                <option value="30">30 €</option>
+                <option value="50">50 €</option>
+                <option value="100">100 €</option>
+            </select>
+        </div>
+    </div>
+
+    {# 🔥 CONTENEUR DYNAMIQUE #}
+    <div class="row" id="menu-container">
+
         {% for menu in menus %}
             <div class="col-md-4 mb-4">
-    <div class="card shadow-sm h-100">
+                <div class="card shadow-sm h-100">
 
-        {# IMAGE #}
-        {% if menu.images|length > 0 %}
-            <img 
-                src="{{ asset(menu.images|first.url) }}" 
-                class="card-img-top"
-                style="height: 200px; object-fit: cover;"
-                alt="{{ menu.titre }}"
-            >
-        {% else %}
-            <img 
-                src="{{ asset('images/default.jpg') }}" 
-                class="card-img-top"
-                style="height: 200px; object-fit: cover;"
-                alt="Image par défaut"
-            >
-        {% endif %}
+                    {% if menu.images|length > 0 %}
+                        <img 
+                            src="{{ asset(menu.images|first.url) }}" 
+                            class="card-img-top"
+                            style="height: 200px; object-fit: cover;"
+                            alt="{{ menu.titre }}"
+                        >
+                    {% else %}
+                        <img 
+                            src="{{ asset('images/default.jpg') }}" 
+                            class="card-img-top"
+                            style="height: 200px; object-fit: cover;"
+                            alt="Image par défaut"
+                        >
+                    {% endif %}
 
-        <div class="card-body">
-            <h5 class="card-title">{{ menu.titre }}</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ menu.titre }}</h5>
 
-            <p class="card-text">
-                {{ menu.description|slice(0,120) }}...
-            </p>
+                        <p class="card-text">
+                            {{ menu.description|slice(0,120) }}...
+                        </p>
 
-            <p>
-                <strong>{{ menu.nombrePersonnesMinimum }} personnes</strong><br>
-                À partir de <strong>{{ menu.prix }} €</strong>
-            </p>
+                        <p>
+                            <strong>{{ menu.nombrePersonnesMinimum }} personnes</strong><br>
+                            À partir de <strong>{{ menu.prix }} €</strong>
+                        </p>
 
-            <a href="{{ path('app_menu_show', {id: menu.id}) }}" 
-               class="btn btn-primary">
-                Voir détail
-            </a>
-        </div>
+                        <a href="{{ path('app_menu_show', {id: menu.id}) }}" 
+                           class="btn btn-primary">
+                            Voir détail
+                        </a>
+                    </div>
 
-    </div>
-</div>
+                </div>
             </div>
         {% else %}
             <p class="text-center">Aucun menu disponible.</p>
         {% endfor %}
+
     </div>
 </div>
+
+{# 🚀 JAVASCRIPT AJAX #}
+<script>
+document.getElementById('priceFilter').addEventListener('change', function () {
+
+    const maxPrice = this.value;
+
+    fetch('/menus/filter?maxPrice=' + maxPrice)
+        .then(response => response.json())
+        .then(data => {
+
+            let container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = "<p class='text-center'>Aucun menu trouvé.</p>";
+                return;
+            }
+
+            data.forEach(menu => {
+
+                container.innerHTML += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm h-100">
+
+                            <img 
+                                src="/images/default.jpg"
+                                class="card-img-top"
+                                style="height: 200px; object-fit: cover;"
+                                alt="Image"
+                            >
+
+                            <div class="card-body">
+                                <h5 class="card-title">${menu.titre}</h5>
+
+                                <p class="card-text">
+                                    ${menu.description.substring(0,120)}...
+                                </p>
+
+                                <p>
+                                    <strong>${menu.nombrePersonnesMinimum} personnes</strong><br>
+                                    À partir de <strong>${menu.prix} €</strong>
+                                </p>
+
+                                <a href="/menus/${menu.id}" 
+                                   class="btn btn-primary">
+                                    Voir détail
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            });
+
+        });
+});
+</script>
 
 {% endblock %}
