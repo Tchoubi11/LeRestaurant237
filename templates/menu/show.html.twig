@@ -1,9 +1,54 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1>{{ menu.titre }}</h1>
 
+<div class="container mt-5">
+
+    <h1 class="mb-4">{{ menu.titre }}</h1>
+
+    {# ===== CAROUSEL ===== #}
+    {% if menu.images|length > 0 %}
+
+        <div id="menuCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+
+            <div class="carousel-inner">
+
+                {% for image in menu.images %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img 
+                            src="{{ asset(image.url) }}" 
+                            class="d-block w-100"
+                            style="height:400px; object-fit:cover;"
+                            alt="{{ menu.titre }}"
+                        >
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            {# Bouton précédent #}
+            <button class="carousel-control-prev" type="button" data-bs-target="#menuCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            {# Bouton suivant #}
+            <button class="carousel-control-next" type="button" data-bs-target="#menuCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
+
+    {% else %}
+
+        <img 
+            src="{{ asset('images/default.jpg') }}" 
+            class="img-fluid mb-4"
+            style="height:400px; object-fit:cover;"
+        >
+
+    {% endif %}
+
+    {# ===== INFOS MENU ===== #}
     <p>{{ menu.description }}</p>
 
     <p>
@@ -12,7 +57,9 @@
     </p>
 
     <a href="{{ path('app_menus') }}" class="btn btn-secondary">
-        Retour
+        Retour aux menus
     </a>
+
 </div>
+
 {% endblock %}

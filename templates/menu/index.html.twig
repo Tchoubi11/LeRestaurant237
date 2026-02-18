@@ -8,24 +8,45 @@
     <div class="row">
         {% for menu in menus %}
             <div class="col-md-4 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ menu.titre }}</h5>
+    <div class="card shadow-sm h-100">
 
-                        <p class="card-text">
-                            {{ menu.description|slice(0,120) }}...
-                        </p>
+        {# IMAGE #}
+        {% if menu.images|length > 0 %}
+            <img 
+                src="{{ asset(menu.images|first.url) }}" 
+                class="card-img-top"
+                style="height: 200px; object-fit: cover;"
+                alt="{{ menu.titre }}"
+            >
+        {% else %}
+            <img 
+                src="{{ asset('images/default.jpg') }}" 
+                class="card-img-top"
+                style="height: 200px; object-fit: cover;"
+                alt="Image par défaut"
+            >
+        {% endif %}
 
-                        <p>
-                            <strong>{{ menu.nombrePersonnesMinimum }} personnes minimum</strong><br>
-                            À partir de <strong>{{ menu.prix }} €</strong>
-                        </p>
+        <div class="card-body">
+            <h5 class="card-title">{{ menu.titre }}</h5>
 
-                        <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn btn-primary">
-                            Voir détail
-                        </a>
-                    </div>
-                </div>
+            <p class="card-text">
+                {{ menu.description|slice(0,120) }}...
+            </p>
+
+            <p>
+                <strong>{{ menu.nombrePersonnesMinimum }} personnes</strong><br>
+                À partir de <strong>{{ menu.prix }} €</strong>
+            </p>
+
+            <a href="{{ path('app_menu_show', {id: menu.id}) }}" 
+               class="btn btn-primary">
+                Voir détail
+            </a>
+        </div>
+
+    </div>
+</div>
             </div>
         {% else %}
             <p class="text-center">Aucun menu disponible.</p>
