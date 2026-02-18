@@ -26,6 +26,21 @@ class Menu
     private ?float $prix = null;
 
     #[ORM\Column]
+    private ?int $nombrePersonnesMinimum = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $theme = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $regime = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $conditionsMenu = null;
+
+    #[ORM\Column]
+    private ?int $stock = null;
+
+    #[ORM\Column]
     private ?\DateTime $dateCreation = null;
 
     /**
@@ -34,9 +49,18 @@ class Menu
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'menu')]
     private Collection $commandes;
 
+    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
+    private Collection $plats;
+
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Image::class, cascade: ['persist', 'remove'])]
+    private Collection $images;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->plats = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->dateCreation = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -91,6 +115,7 @@ class Menu
 
         return $this;
     }
+    
 
     /**
      * @return Collection<int, Commande>
@@ -119,6 +144,109 @@ class Menu
             }
         }
 
+        return $this;
+    }
+
+    public function getNombrePersonnesMinimum(): ?int
+    {
+        return $this->nombrePersonnesMinimum;
+    }
+
+    public function setNombrePersonnesMinimum(int $nombre): static
+    {
+        $this->nombrePersonnesMinimum = $nombre;
+        return $this;
+    }
+
+    public function getTheme(): ?string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(string $theme): static
+    {
+        $this->theme = $theme;
+        return $this;
+    }
+
+    public function getRegime(): ?string
+    {
+        return $this->regime;
+    }
+
+    public function setRegime(string $regime): static
+    {
+        $this->regime = $regime;
+        return $this;
+    }
+
+    public function getConditionsMenu(): ?string
+    {
+        return $this->conditionsMenu;
+    }
+
+    public function setConditionsMenu(?string $conditions): static
+    {
+        $this->conditionsMenu = $conditions;
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = $stock;
+        return $this;
+    }
+    /**
+     * @return Collection<int, Plat>
+     */
+    public function getPlats(): Collection
+    {
+        return $this->plats;
+    }
+
+    public function addPlat(Plat $plat): static
+    {
+        if (!$this->plats->contains($plat)) {
+            $this->plats->add($plat);
+        }
+        return $this;
+    }
+
+    public function removePlat(Plat $plat): static
+    {
+        $this->plats->removeElement($plat);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setMenu($this);
+        }
+        return $this;
+    }
+
+    public function removeImage(Image $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            if ($image->getMenu() === $this) {
+                $image->setMenu(null);
+            }
+        }
         return $this;
     }
 }
