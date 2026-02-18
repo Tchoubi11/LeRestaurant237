@@ -41,7 +41,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Menus', 'fas fa-utensils', Menu::class);
         yield MenuItem::linkToCrud('Plats', 'fas fa-drumstick-bite', Plat::class);
         yield MenuItem::linkToCrud('Allergènes', 'fas fa-exclamation-triangle', Allergene::class);
-
+        yield MenuItem::linkToCrud('Images', 'fa fa-image', Image::class);
         yield MenuItem::linkToRoute('Voir le site', 'fas fa-globe', 'app_menus');
+        
     }
 }
