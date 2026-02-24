@@ -40,12 +40,10 @@ class Menu
     #[ORM\Column]
     private ?int $stock = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateCreation = null;
+    // ✅ CORRECTION ICI
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $dateCreation = null;
 
-    /**
-     * @var Collection<int, Commande>
-     */
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'menu')]
     private Collection $commandes;
 
@@ -60,6 +58,8 @@ class Menu
         $this->commandes = new ArrayCollection();
         $this->plats = new ArrayCollection();
         $this->images = new ArrayCollection();
+
+        // ✅ Cohérent avec le type Doctrine
         $this->dateCreation = new \DateTimeImmutable();
     }
 
@@ -76,7 +76,6 @@ class Menu
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -88,7 +87,6 @@ class Menu
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -100,50 +98,18 @@ class Menu
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
-
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTime
+    // ✅ CORRIGÉ
+    public function getDateCreation(): ?\DateTimeImmutable
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTime $dateCreation): static
+    public function setDateCreation(\DateTimeImmutable $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-    
-
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
-    public function addCommande(Commande $commande): static
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes->add($commande);
-            $commande->setMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): static
-    {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getMenu() === $this) {
-                $commande->setMenu(null);
-            }
-        }
-
         return $this;
     }
 
@@ -201,9 +167,12 @@ class Menu
         $this->stock = $stock;
         return $this;
     }
-    /**
-     * @return Collection<int, Plat>
-     */
+
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
     public function getPlats(): Collection
     {
         return $this->plats;
@@ -223,9 +192,6 @@ class Menu
         return $this;
     }
 
-    /**
-     * @return Collection<int, Image>
-     */
     public function getImages(): Collection
     {
         return $this->images;
