@@ -24,21 +24,22 @@
                 <div class="card shadow-sm h-100">
 
                     {% if menu.images|length > 0 %}
-    {% set firstImage = menu.images|first %}
-    <img 
-        src="{{ asset('uploads/menus/' ~ firstImage.url) }}" 
-        class="card-img-top"
-        style="height: 200px; object-fit: cover;"
-        alt="{{ menu.titre }}"
-    >
-{% else %}
-    <img 
-        src="{{ asset('images/default.jpg') }}" 
-        class="card-img-top"
-        style="height: 200px; object-fit: cover;"
-        alt="Image par défaut"
-    >
-{% endif %}
+                        {% set firstImage = menu.images|first %}
+                        <img 
+                            src="{{ asset('uploads/menus/' ~ firstImage.url) }}" 
+                            class="card-img-top"
+                            style="height: 200px; object-fit: cover;"
+                            alt="{{ menu.titre }}"
+                        >
+                    {% else %}
+                        <img 
+                            src="{{ asset('images/default.jpg') }}" 
+                            class="card-img-top"
+                            style="height: 200px; object-fit: cover;"
+                            alt="Image par défaut"
+                        >
+                    {% endif %}
+
                     <div class="card-body">
                         <h5 class="card-title">{{ menu.titre }}</h5>
 
@@ -90,7 +91,7 @@ document.getElementById('priceFilter').addEventListener('change', function () {
                         <div class="card shadow-sm h-100">
 
                             <img 
-                                src="/images/default.jpg"
+                                src="${menu.image ? '/uploads/menus/' + menu.image : '/images/default.jpg'}"
                                 class="card-img-top"
                                 style="height: 200px; object-fit: cover;"
                                 alt="Image"
