@@ -5,7 +5,6 @@
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Nos Menus</h1>
 
-    {# 🔎 FILTRE PRIX #}
     <div class="row mb-4">
         <div class="col-md-4">
             <select id="priceFilter" class="form-select">
@@ -18,7 +17,6 @@
         </div>
     </div>
 
-    {# 🔥 CONTENEUR DYNAMIQUE #}
     <div class="row" id="menu-container">
 
         {% for menu in menus %}
@@ -26,26 +24,26 @@
                 <div class="card shadow-sm h-100">
 
                     {% if menu.images|length > 0 %}
-                        <img 
-                            src="{{ asset(menu.images|first.url) }}" 
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover;"
-                            alt="{{ menu.titre }}"
-                        >
-                    {% else %}
-                        <img 
-                            src="{{ asset('images/default.jpg') }}" 
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover;"
-                            alt="Image par défaut"
-                        >
-                    {% endif %}
-
+    {% set firstImage = menu.images|first %}
+    <img 
+        src="{{ asset('uploads/menus/' ~ firstImage.url) }}" 
+        class="card-img-top"
+        style="height: 200px; object-fit: cover;"
+        alt="{{ menu.titre }}"
+    >
+{% else %}
+    <img 
+        src="{{ asset('images/default.jpg') }}" 
+        class="card-img-top"
+        style="height: 200px; object-fit: cover;"
+        alt="Image par défaut"
+    >
+{% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ menu.titre }}</h5>
 
                         <p class="card-text">
-                            {{ menu.description|slice(0,120) }}...
+                            {{ menu.description|striptags|slice(0,120) }}...
                         </p>
 
                         <p>
@@ -68,7 +66,6 @@
     </div>
 </div>
 
-{# 🚀 JAVASCRIPT AJAX #}
 <script>
 document.getElementById('priceFilter').addEventListener('change', function () {
 
@@ -103,7 +100,7 @@ document.getElementById('priceFilter').addEventListener('change', function () {
                                 <h5 class="card-title">${menu.titre}</h5>
 
                                 <p class="card-text">
-                                    ${menu.description.substring(0,120)}...
+                                    ${menu.description.replace(/<[^>]*>/g, '').substring(0,120)}...
                                 </p>
 
                                 <p>

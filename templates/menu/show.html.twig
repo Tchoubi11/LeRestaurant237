@@ -16,7 +16,7 @@
                 {% for image in menu.images %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <img 
-                            src="{{ asset(image.url) }}" 
+                            src="{{ asset('uploads/menus/' ~ image.url) }}" 
                             class="d-block w-100"
                             style="height:400px; object-fit:cover;"
                             alt="{{ menu.titre }}"
@@ -49,7 +49,9 @@
     {% endif %}
 
     {# ===== INFOS MENU ===== #}
-    <p>{{ menu.description }}</p>
+    <div>
+        {{ menu.description|raw }}
+    </div>
 
     <p>
         <strong>{{ menu.nombrePersonnesMinimum }} personnes minimum</strong><br>

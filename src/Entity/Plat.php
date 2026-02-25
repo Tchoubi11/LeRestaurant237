@@ -19,6 +19,9 @@ class Plat
     #[ORM\Column(length: 50)]
     private ?string $type = null;
 
+    #[ORM\Column(type: 'text')]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,4 +51,18 @@ class Plat
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+    return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+    $this->description = $description;
+    return $this;
+    }
+    public function __toString(): string
+    {
+    return $this->nom ?? '';
+    }
 }

@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class MenuCrudController extends AbstractCrudController
 {
@@ -59,11 +60,16 @@ class MenuCrudController extends AbstractCrudController
             ->setRequired(false)
             ->hideOnIndex();
 
+        // 🔥 AJOUT IMPORTANT : relation ManyToMany avec Plat
+        yield AssociationField::new('plats')
+            ->setFormTypeOption('by_reference', false)
+            ->autocomplete();
+
         yield CollectionField::new('images')
-        ->useEntryCrudForm(ImageCrudController::class)
-        ->allowAdd()
-        ->allowDelete()
-        ->setFormTypeOption('by_reference', false);
+            ->useEntryCrudForm(ImageCrudController::class)
+            ->allowAdd()
+            ->allowDelete()
+            ->setFormTypeOption('by_reference', false);
 
         yield DateTimeField::new('dateCreation')
             ->hideOnForm();
