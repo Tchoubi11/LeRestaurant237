@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container mt-5">
+
+    <h1 class="mb-4">Finaliser votre commande</h1>
+
+    <div class="alert alert-info">
+        Vous êtes sur le point de commander :
+        <strong>{{ menu.titre }}</strong>
+        ({{ menu.prix }} €)
+    </div>
+
+    <div class="card p-4 shadow-sm">
+        {{ form_start(form) }}
+            {{ form_row(form.nomClient) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.telephone) }}
+
+            <button class="btn btn-success mt-3">
+                 Valider la commande
+            </button>
+        {{ form_end(form) }}
+    </div>
+
+    <a href="{{ path('app_menus') }}" class="btn btn-secondary mt-3">
+        Retour aux menus
+    </a>
+
+</div>
+
+{% endblock %}

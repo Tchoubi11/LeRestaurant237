@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Commande;
-use App\Entity\menu;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,11 +15,6 @@ class CommandeType extends AbstractType
             ->add('nomClient')
             ->add('email')
             ->add('telephone')
-            ->add('dateCommande')
-            ->add('menu', EntityType::class, [
-                'class' => menu::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

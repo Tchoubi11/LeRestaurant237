@@ -8,11 +8,8 @@
 
     {# ===== CAROUSEL ===== #}
     {% if menu.images|length > 0 %}
-
         <div id="menuCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-
             <div class="carousel-inner">
-
                 {% for image in menu.images %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <img 
@@ -23,44 +20,63 @@
                         >
                     </div>
                 {% endfor %}
-
             </div>
 
-            {# Bouton précédent #}
             <button class="carousel-control-prev" type="button" data-bs-target="#menuCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </button>
 
-            {# Bouton suivant #}
             <button class="carousel-control-next" type="button" data-bs-target="#menuCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon"></span>
             </button>
-
         </div>
-
     {% else %}
-
         <img 
             src="{{ asset('images/default.jpg') }}" 
             class="img-fluid mb-4"
             style="height:400px; object-fit:cover;"
         >
-
     {% endif %}
 
-    {# ===== INFOS MENU ===== #}
-    <div>
+    
+    <div class="mb-4">
         {{ menu.description|raw }}
     </div>
 
-    <p>
+    
+    <div class="mb-3 fs-5">
         <strong>{{ menu.nombrePersonnesMinimum }} personnes minimum</strong><br>
         Prix : <strong>{{ menu.prix }} €</strong>
-    </p>
+    </div>
 
-    <a href="{{ path('app_menus') }}" class="btn btn-secondary">
-        Retour aux menus
+    
+    <div class="alert alert-danger fs-5">
+        <strong>⚠️ Conditions du menu :</strong><br>
+        Minimum {{ menu.nombrePersonnesMinimum }} personnes.<br>
+        Toute commande doit être validée 48h à l/'avance.<br>
+        Acompte obligatoire pour toute réservation.
+    </div>
+
+   
+    <div class="mt-4">
+
+        {% if app.user %}
+    <a href="{{ path('app_commande_new', {id: menu.id}) }}" 
+       class="btn btn-success btn-lg">
+         Commander ce menu
     </a>
+{% else %}
+    <a href="{{ path('app_login') }}" 
+       class="btn btn-success btn-lg">
+         Connectez-vous pour commander
+    </a>
+{% endif %} 
+
+        <a href="{{ path('app_menus') }}" class="btn btn-secondary ms-2">
+            Retour aux menus
+        </a>
+
+    </div>
 
 </div>
 
