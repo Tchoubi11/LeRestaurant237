@@ -22,13 +22,22 @@ class Commande
     #[ORM\Column(length: 255)]
     private ?string $telephone = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateCommande = null;
 
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'commandes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Menu $menu = null;
+   #[ORM\Column(type: 'integer')]
+private int $nombrePersonnes = 1;
 
+#[ORM\Column(type: 'float')]
+private float $prixTotal = 0;
+
+#[ORM\Column(type: 'float')]
+private float $prixLivraison = 5;
+
+#[ORM\Column(type: 'datetime')]
+private ?\DateTimeInterface $dateCommande = null;
+
+#[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'commandes')]
+#[ORM\JoinColumn(nullable: false)]
+private ?Menu $menu = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -93,4 +102,40 @@ class Commande
 
     return $this;
    }
+
+   public function getNombrePersonnes(): ?int
+   {
+    return $this->nombrePersonnes;
+   }
+
+   public function setNombrePersonnes(int $nombrePersonnes): self
+   {
+    $this->nombrePersonnes = $nombrePersonnes;
+
+    return $this;
+   }
+
+   public function getPrixTotal(): ?float
+  {
+    return $this->prixTotal;
+  }
+
+  public function setPrixTotal(float $prixTotal): self
+  {
+    $this->prixTotal = $prixTotal;
+
+    return $this;
+  }
+  
+  public function getPrixLivraison(): ?float
+  {
+    return $this->prixLivraison;
+  }
+
+  public function setPrixLivraison(float $prixLivraison): self
+  {
+    $this->prixLivraison = $prixLivraison;
+
+    return $this;
+  }
 }

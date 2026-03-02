@@ -9,19 +9,32 @@
     <div class="alert alert-info">
         Vous êtes sur le point de commander :
         <strong>{{ menu.titre }}</strong>
-        ({{ menu.prix }} €)
+        ({{ menu.prix }} € / personne)
     </div>
 
     <div class="card p-4 shadow-sm">
+
         {{ form_start(form) }}
+
             {{ form_row(form.nomClient) }}
             {{ form_row(form.email) }}
             {{ form_row(form.telephone) }}
+            {{ form_row(form.nombrePersonnes) }}
+
+            <div class="alert alert-secondary mt-3">
+                <p><strong>Minimum :</strong> {{ menu.nombrePersonnesMinimum }} personnes</p>
+                <p><strong>Livraison :</strong> 5 €</p>
+                <p class="text-danger">
+                     -10% si vous commandez au moins {{ menu.nombrePersonnesMinimum + 5 }} personnes
+                </p>
+            </div>
 
             <button class="btn btn-success mt-3">
                  Valider la commande
             </button>
+
         {{ form_end(form) }}
+
     </div>
 
     <a href="{{ path('app_menus') }}" class="btn btn-secondary mt-3">

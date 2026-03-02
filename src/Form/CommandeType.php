@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class CommandeType extends AbstractType
 {
@@ -15,7 +16,11 @@ class CommandeType extends AbstractType
             ->add('nomClient')
             ->add('email')
             ->add('telephone')
-        ;
+            ->add('nombrePersonnes', IntegerType::class, [
+        'label' => 'Nombre de personnes',
+        'attr' => ['min' => 1]
+        ]);
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
