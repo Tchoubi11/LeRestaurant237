@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 class Commande
@@ -22,25 +24,38 @@ class Commande
     #[ORM\Column(length: 255)]
     private ?string $telephone = null;
 
+    #[ORM\Column(length: 30)]
+    private string $statut = 'en_attente';
 
-   #[ORM\Column(type: 'integer')]
-private int $nombrePersonnes = 1;
+    #[ORM\Column(type: 'integer')]
+    private int $nombrePersonnes = 1;
 
-#[ORM\Column(type: 'float')]
-private float $prixTotal = 0;
+    #[ORM\Column(type: 'float')]
+    private float $prixTotal = 0;
 
-#[ORM\Column(type: 'float')]
-private float $prixLivraison = 5;
+    #[ORM\Column(type: 'float')]
+    private float $prixLivraison = 5;
 
-#[ORM\Column(type: 'datetime')]
-private ?\DateTimeInterface $dateCommande = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $dateCommande = null;
 
-#[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'commandes')]
-#[ORM\JoinColumn(nullable: false)]
-private ?Menu $menu = null;
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeHistorique::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $historiques;
+
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'commandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Menu $menu = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function __construct()
+    {
+        $this->historiques = new ArrayCollection();
     }
 
     public function getNomClient(): ?string
@@ -138,4 +153,42 @@ private ?Menu $menu = null;
 
     return $this;
   }
+
+  public function getStatut(): string
+  {
+    return $this->statut;
+  }
+
+  public function setStatut(string $statut): self
+  {
+    $this->statut = $statut;
+    return $this;
+  }
+
+
+    public function getHistoriques(): Collection
+    {
+        return $this->historiques;
+    }
+
+    public function addHistorique(CommandeHistorique $historique): self
+    {
+        if (!$this->historiques->contains($historique)) {
+            $this->historiques[] = $historique;
+            $historique->setCommande($this);
+        }
+
+        return $this;
+    }
+
+     public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
 }
