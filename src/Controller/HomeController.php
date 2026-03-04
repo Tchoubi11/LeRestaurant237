@@ -14,7 +14,7 @@ final class HomeController extends AbstractController
     {
         $avisValides = $avisRepository->findBy(
             ['valide' => true],
-            ['dateCreation' => 'DESC']
+            ['dateAvis' => 'DESC']
         );
 
         return $this->render('home/index.html.twig', [

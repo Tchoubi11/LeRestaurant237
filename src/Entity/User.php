@@ -53,9 +53,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Avis::class, orphanRemoval: true)]
+    private Collection $avis;
+
     public function __construct()
 {
     $this->commandes = new ArrayCollection();
+    $this->avis = new ArrayCollection();
 }
     public function getId(): ?int
     {
@@ -152,5 +156,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCommandes(): Collection
   {
     return $this->commandes;
+  }
+
+    public function getAvis(): Collection
+  {
+    return $this->avis;
+  }
+
+   public function addAvis(Avis $avis): static
+  {
+    if (!$this->avis->contains($avis)) {
+        $this->avis->add($avis);
+        $avis->setUser($this);
+    }
+
+    return $this;
+  }
+
+    public function removeAvis(Avis $avis): static
+  {
+    if ($this->avis->removeElement($avis)) {
+        if ($avis->getUser() === $this) {
+            $avis->setUser(null);
+        }
+    }
+
+    return $this;
   }
 }

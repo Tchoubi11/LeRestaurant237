@@ -51,8 +51,17 @@
             <div class="col-12 col-sm-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">{{ avis.nom }}</h5>
-                        <p class="card-text">{{ avis.contenu }}</p>
+                        <h5 class="card-title">
+    {{ avis.user.prenom }} {{ avis.user.nom }}
+</h5>
+
+<p class="card-text">
+    {{ avis.commentaire }}
+</p>
+
+<small class="text-muted">
+    {{ avis.dateAvis|date('d/m/Y') }}
+</small>
                         <span class="badge bg-success">Note : {{ avis.note }}/5</span>
                     </div>
                 </div>

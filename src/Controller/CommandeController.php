@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Entity\Menu;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Form\AvisType;
+use App\Entity\Avis;
 
 class CommandeController extends AbstractController
 {
@@ -53,6 +57,7 @@ public function new(
     /** @var \App\Entity\User $user */
     $user = $this->getUser();
 
+    $commande->setUser($user);
     $commande->setNomClient($user->getPrenom().' '.$user->getNom());
     $commande->setEmail($user->getEmail());
 
@@ -112,6 +117,119 @@ public function new(
     return $this->render('commande/new.html.twig', [
         'form' => $form->createView(),
         'menu' => $menu
+    ]);
+}
+
+#[Route('/mon-compte', name: 'app_account')]
+#[IsGranted('ROLE_USER')]
+public function account(EntityManagerInterface $em): Response
+{
+    $commandes = $em->getRepository(Commande::class)
+        ->findBy(['user' => $this->getUser()], ['dateCommande' => 'DESC']);
+
+    return $this->render('account/index.html.twig', [
+        'commandes' => $commandes
+    ]);
+}
+
+#[Route('/commande/annuler/{id}', name: 'app_commande_annuler')]
+#[IsGranted('ROLE_USER')]
+public function annuler(Commande $commande, EntityManagerInterface $em)
+{
+    // Ici on vérifie que la commande appartient à l'utilisateur connecté
+    if ($commande->getUser() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
+
+    // Si déjà acceptée → pas annulable
+    if ($commande->getStatut() === 'accepte') {
+        $this->addFlash('danger', 'Commande déjà acceptée');
+        return $this->redirectToRoute('app_account');
+    }
+
+    $commande->setStatut('annulee');
+    $em->flush();
+
+    $this->addFlash('success', 'Commande annulée avec succès');
+
+    return $this->redirectToRoute('app_account');
+}
+
+#[Route('/admin/commande/{id}/terminer', name: 'admin_commande_terminer')]
+public function terminer(
+    Commande $commande,
+    EntityManagerInterface $em,
+    MailerInterface $mailer
+) {
+    $commande->setStatut('terminee');
+
+    $em->flush();
+
+    // Email automatique
+    $email = (new Email())
+        ->from('no-reply@vitetgourmand.com')
+        ->to($commande->getUser()->getEmail())
+        ->subject('Votre commande est terminée')
+        ->html('
+            <h2>Commande terminée </h2>
+            <p>Votre commande est maintenant terminée.</p>
+            <p>Connectez-vous à votre compte pour laisser un avis.</p>
+        ');
+
+    $mailer->send($email);
+
+    $this->addFlash('success', 'Commande marquée comme terminée');
+
+    return $this->redirectToRoute('admin_commandes');
+}
+
+#[Route('/commande/{id}/avis', name: 'app_commande_avis')]
+#[IsGranted('ROLE_USER')]
+public function avis(
+    Commande $commande,
+    Request $request,
+    EntityManagerInterface $em
+): Response {
+
+    $user = $this->getUser();
+
+
+    if ($commande->getUser() !== $user) {
+        throw $this->createAccessDeniedException();
+    }
+
+    // Doit être terminée
+    if ($commande->getStatut() !== 'terminee') {
+        $this->addFlash('danger', 'Vous ne pouvez pas encore laisser un avis.');
+        return $this->redirectToRoute('app_account');
+    }
+
+    if ($commande->getAvis() !== null) {
+        $this->addFlash('info', 'Vous avez déjà laissé un avis.');
+        return $this->redirectToRoute('app_account');
+    }
+
+    $avis = new Avis();
+    $avis->setCommande($commande);
+    $avis->setUser($user);
+    $avis->setDateAvis(new \DateTime());
+
+    $form = $this->createForm(AvisType::class, $avis);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        $em->persist($avis);
+        $em->flush();
+
+        $this->addFlash('success', 'Merci pour votre avis ');
+
+        return $this->redirectToRoute('app_account');
+    }
+
+    return $this->render('avis/new.html.twig', [
+        'form' => $form->createView(),
+        'commande' => $commande
     ]);
 }
 }

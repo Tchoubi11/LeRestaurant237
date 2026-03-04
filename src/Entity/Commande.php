@@ -39,6 +39,10 @@ class Commande
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $dateCommande = null;
 
+    #[ORM\OneToOne(mappedBy: 'commande', targetEntity: Avis::class)]
+    private ?Avis $avis = null;
+
+
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeHistorique::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $historiques;
 
@@ -191,4 +195,15 @@ class Commande
         $this->user = $user;
         return $this;
     }
+
+    public function getAvis(): ?Avis
+   {
+    return $this->avis;
+   }
+
+   public function setAvis(?Avis $avis): static
+   {
+    $this->avis = $avis;
+    return $this;
+   }
 }

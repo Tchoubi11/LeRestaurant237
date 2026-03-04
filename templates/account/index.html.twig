@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h2 class="mb-4">Mes commandes</h2>
+
+{% if commandes is empty %}
+    <div class="alert alert-info">
+        Vous n'avez encore passé aucune commande.
+    </div>
+{% endif %}
+
+{% for commande in commandes %}
+    <div class="card mb-3 p-3 shadow-sm">
+        <h5>{{ commande.menu.titre }}</h5>
+        <p><strong>Date :</strong> {{ commande.dateCommande|date('d/m/Y H:i') }}</p>
+        <p><strong>Statut :</strong> {{ commande.statut }}</p>
+        <p><strong>Total :</strong> {{ commande.prixTotal }} €</p>
+
+        {% if commande.statut == 'en_attente' %}
+            <a href="{{ path('app_commande_annuler', {id: commande.id}) }}" 
+               class="btn btn-danger btn-sm">
+               Annuler
+            </a>
+        {% else %}
+            <a href="{{ path('app_commande_suivi', {id: commande.id}) }}" 
+               class="btn btn-info btn-sm">
+               Voir le suivi
+            </a>
+        {% endif %}
+
+        {% if commande.statut == 'terminee' and not commande.avis %}
+    <a href="{{ path('app_commande_avis', {id: commande.id}) }}"
+       class="btn btn-success btn-sm">
+       Laisser un avis
+    </a>
+{% endif %}
+    </div>
+{% endfor %}
+{% endblock %}
