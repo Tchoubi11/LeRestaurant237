@@ -20,6 +20,10 @@
                class="btn btn-danger btn-sm">
                Annuler
             </a>
+            <a href="{{ path('app_commande_modifier', {id: commande.id}) }}"
+            class="btn btn-warning btn-sm">
+               Modifier
+            </a>
         {% else %}
             <a href="{{ path('app_commande_suivi', {id: commande.id}) }}" 
                class="btn btn-info btn-sm">

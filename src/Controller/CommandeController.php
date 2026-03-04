@@ -15,6 +15,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Form\AvisType;
 use App\Entity\Avis;
+use App\Entity\CommandeHistorique;
 
 class CommandeController extends AbstractController
 {
@@ -92,8 +93,19 @@ public function new(
         $commande->setPrixTotal($prixFinal);
         $commande->setPrixLivraison($prixLivraison);
 
-        $em->persist($commande);
-        $em->flush();
+        //  Définir le statut initial
+    $commande->setStatut('en_attente');
+
+    //  Création de l’historique
+    $historique = new CommandeHistorique();
+    $historique->setCommande($commande);
+    $historique->setStatut('en_attente');
+    $historique->setDateModification(new \DateTime());
+
+    // Persist
+    $em->persist($commande);
+    $em->persist($historique);
+    $em->flush();
 
         //  Email confirmation
         $email = (new \Symfony\Component\Mime\Email())
@@ -148,6 +160,12 @@ public function annuler(Commande $commande, EntityManagerInterface $em)
     }
 
     $commande->setStatut('annulee');
+    $historique = new CommandeHistorique();
+    $historique->setCommande($commande);
+    $historique->setStatut('annulee');
+    $historique->setDateModification(new \DateTime());
+
+    $em->persist($historique);
     $em->flush();
 
     $this->addFlash('success', 'Commande annulée avec succès');
@@ -229,6 +247,28 @@ public function avis(
 
     return $this->render('avis/new.html.twig', [
         'form' => $form->createView(),
+        'commande' => $commande
+    ]);
+}
+
+#[Route('/commande/modifier/{id}', name: 'app_commande_modifier')]
+public function modifier(Commande $commande): Response
+{
+    return $this->render('commande/modifier.html.twig', [
+        'commande' => $commande
+    ]);
+}
+
+#[Route('/commande/{id}/suivi', name: 'app_commande_suivi')]
+#[IsGranted('ROLE_USER')]
+public function suivi(Commande $commande): Response
+{
+    // Sécurité : empêcher accès à une autre commande
+    if ($commande->getUser() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
+
+    return $this->render('commande/suivi.html.twig', [
         'commande' => $commande
     ]);
 }
