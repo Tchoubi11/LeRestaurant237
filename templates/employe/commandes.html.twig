@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des commandes{% endblock %}
+
+{% block body %}
+
+<a href="{{ path('app_employe') }}" class="btn btn-secondary mb-3">
+    ← Retour au dashboard
+</a>
+<div class="container mt-5">
+
+    <h1 class="mb-4">Gestion des commandes</h1>
+
+    <!-- FILTRE -->
+    <form method="get" class="row mb-4">
+
+        <div class="col-md-4">
+            <select name="statut" class="form-control">
+                <option value="">-- Filtrer par statut --</option>
+                <option value="accepte">Accepté</option>
+                <option value="en_preparation">En préparation</option>
+                <option value="en_livraison">En livraison</option>
+                <option value="livre">Livré</option>
+                <option value="retour_materiel">Retour matériel</option>
+                <option value="terminee">Terminée</option>
+                <option value="annulee">Annulée</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <input type="text" name="client" class="form-control" placeholder="Nom du client">
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-primary">Filtrer</button>
+        </div>
+
+    </form>
+
+    <!-- TABLE COMMANDES -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.nomClient }}</td>
+                <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+                <td>{{ commande.statut }}</td>
+                <td>
+                    <a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}" class="btn btn-danger btn-sm">
+                        Annuler
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune commande trouvée</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

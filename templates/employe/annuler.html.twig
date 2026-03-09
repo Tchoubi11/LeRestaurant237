@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h2>Annuler la commande #{{ commande.id }}</h2>
+
+<form method="post">
+
+    <label>Mode de contact :</label>
+    <select name="mode_contact" class="form-control" required>
+        <option value="">-- Choisir --</option>
+        <option value="gsm">Appel GSM</option>
+        <option value="email">Email</option>
+    </select>
+
+    <label class="mt-3">Motif d'annulation :</label>
+    <textarea name="motif" class="form-control" required></textarea>
+
+    <button class="btn btn-danger mt-3">
+        Confirmer l'annulation
+    </button>
+
+</form>
+
+{% endblock %}

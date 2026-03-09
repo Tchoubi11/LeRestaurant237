@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord Employé{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+
+    <h1 class="mb-4 text-center">Tableau de bord Employé</h1>
+
+
+
+    <div class="row">
+
+        <!-- Commandes -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+
+                    <h5 class="card-title">Gestion des commandes</h5>
+
+                    <p class="card-text">
+                        Consulter, filtrer et modifier les statuts des commandes.
+                    </p>
+
+                    <a href="{{ path('app_employe_commandes') }}" class="btn btn-primary">
+                        Voir les commandes
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Menus -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+
+                    <h5 class="card-title">Menus & Plats</h5>
+
+                    <p class="card-text">
+                        Ajouter, modifier ou supprimer les menus.
+                    </p>
+
+                    <a href="{{ path('app_menus') }}" class="btn btn-success">
+                        Gérer les menus
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Avis -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+
+                    <h5 class="card-title">Avis clients</h5>
+
+                    <p class="card-text">
+                        Valider ou refuser les avis des clients.
+                    </p>
+
+                    <a href="{{ path('app_employe_avis') }}" class="btn btn-warning">
+                        Voir les avis
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -42,6 +42,11 @@ class Commande
     #[ORM\OneToOne(mappedBy: 'commande', targetEntity: Avis::class)]
     private ?Avis $avis = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $motifAnnulation = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $modeContact = null;
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeHistorique::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $historiques;
@@ -206,4 +211,27 @@ class Commande
     $this->avis = $avis;
     return $this;
    }
+
+    public function getMotifAnnulation(): ?string
+  {
+    return $this->motifAnnulation;
+  }
+
+    public function setMotifAnnulation(?string $motifAnnulation): self
+  {
+    $this->motifAnnulation = $motifAnnulation;
+
+    return $this;
+  }
+
+    public function getModeContact(): ?string
+  {
+    return $this->modeContact;
+  }
+
+    public function setModeContact(?string $modeContact): self
+  {
+    $this->modeContact = $modeContact;
+    return $this;
+  }
 }
