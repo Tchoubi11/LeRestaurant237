@@ -1,6 +1,20 @@
-<h1>Statistiques des commandes par menu</h1>
+{% extends 'base.html.twig' %}
 
-<canvas id="chart" data-stats='{{ stats|json_encode|e('html_attr') }}'></canvas>
+{% block body %}
+
+<div class="container mt-5">
+
+<div class="mb-4">
+<a href="{{ path('admin') }}" class="btn btn-secondary">
+← Retour au Dashboard
+</a>
+</div>
+
+<h1 class="mb-4">Statistiques des commandes par menu</h1>
+
+<canvas id="chart" data-stats='{{ stats|json_encode|e("html_attr") }}'></canvas>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -24,3 +38,5 @@ new Chart(canvas, {
 });
 
 </script>
+
+{% endblock %}
