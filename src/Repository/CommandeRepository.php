@@ -16,6 +16,26 @@ class CommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, Commande::class);
     }
 
+    public function countCommandesByMenu()
+{
+    return $this->createQueryBuilder('c')
+        ->select('m.titre as menu, COUNT(c.id) as total')
+        ->join('c.menu', 'm')
+        ->groupBy('m.id')
+        ->getQuery()
+        ->getResult();
+}
+
+public function chiffreAffairesParMenu()
+{
+    return $this->createQueryBuilder('c')
+        ->select('m.titre as menu, SUM(c.prixTotal) as chiffre')
+        ->join('c.menu','m')
+        ->groupBy('m.id')
+        ->getQuery()
+        ->getResult();
+}
+
     //    /**
     //     * @return Commande[] Returns an array of Commande objects
     //     */

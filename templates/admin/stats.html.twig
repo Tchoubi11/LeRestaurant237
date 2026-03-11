@@ -1,0 +1,26 @@
+<h1>Statistiques des commandes par menu</h1>
+
+<canvas id="chart" data-stats='{{ stats|json_encode|e('html_attr') }}'></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const canvas = document.getElementById('chart');
+const statsData = JSON.parse(canvas.dataset.stats);
+
+const labels = statsData.map(item => item.menu);
+const dataValues = statsData.map(item => item.total);
+
+new Chart(canvas, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Commandes par menu',
+            data: dataValues
+        }]
+    }
+});
+
+</script>

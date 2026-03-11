@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Menu;
 use App\Entity\Plat;
 use App\Entity\Allergene;
-
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -13,7 +13,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Controller\Admin\MenuCrudController;
 use App\Controller\Admin\PlatCrudController;
 use App\Controller\Admin\AllergeneCrudController;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -51,5 +50,11 @@ class DashboardController extends AbstractDashboardController
         ->setController(AllergeneCrudController::class);
 
     yield MenuItem::linkToRoute('Voir le site', 'fas fa-globe', 'app_menus');
+
+    yield MenuItem::linkToCrud('Employés', 'fas fa-users', User::class);
+
+    yield MenuItem::linkToRoute('Statistiques', 'fas fa-chart-bar', 'admin_stats');
+
+    yield MenuItem::linkToRoute('Chiffre d\'affaires', 'fas fa-euro-sign', 'admin_ca');
 }
 }

@@ -51,6 +51,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $commandes;
 
     #[ORM\Column]
+    private bool $actif = true;
+
+    #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Avis::class, orphanRemoval: true)]
@@ -183,4 +186,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     return $this;
   }
+
+  public function isActif(): bool
+{
+    return $this->actif;
+}
+
+public function setActif(bool $actif): self
+{
+    $this->actif = $actif;
+    return $this;
+}
+public function isEnabled(): bool
+{
+    return $this->actif;
+}
+
 }
