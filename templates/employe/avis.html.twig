@@ -6,39 +6,75 @@
 
 <div class="container mt-5">
 
-    <a href="{{ path('app_employe') }}" class="btn btn-secondary mb-3">
-        ← Retour au dashboard
-    </a>
+<a href="{{ path('app_employe') }}" class="btn btn-secondary mb-3">
+← Retour au dashboard
+</a>
 
-    <h1 class="mb-4">Avis en attente</h1>
+<h1 class="mb-4">Avis en attente de validation</h1>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Auteur</th>
-                <th>Commentaire</th>
-                <th>Note</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for avis in avis %}
-            <tr>
-                <td>{{ avis.nom }}</td>
-                <td>{{ avis.commentaire }}</td>
-                <td>{{ avis.note }}/5</td>
-                <td>
-                    <a href="{{ path('app_employe_avis_valider', {id: avis.id}) }}" class="btn btn-success btn-sm">Valider</a>
-                    <a href="{{ path('app_employe_avis_refuser', {id: avis.id}) }}" class="btn btn-danger btn-sm">Refuser</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">Aucun avis en attente</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+<tr>
+<th>Client</th>
+<th>Commentaire</th>
+<th>Note</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for avis in avis %}
+
+<tr>
+
+<td>
+<strong>{{ avis.commande.nomClient }}</strong>
+</td>
+
+<td>
+{{ avis.commentaire }}
+</td>
+
+<td>
+⭐ {{ avis.note }}/5
+</td>
+
+<td>
+{{ avis.dateAvis|date('d/m/Y') }}
+</td>
+
+<td>
+
+<a href="{{ path('app_employe_avis_valider', {id: avis.id}) }}"
+class="btn btn-success btn-sm">
+✔ Valider
+</a>
+
+<a href="{{ path('app_employe_avis_refuser', {id: avis.id}) }}"
+class="btn btn-danger btn-sm">
+❌ Refuser
+</a>
+
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="5" class="text-center">
+Aucun avis en attente
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
 
 </div>
 

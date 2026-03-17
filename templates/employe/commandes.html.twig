@@ -4,72 +4,180 @@
 
 {% block body %}
 
-<a href="{{ path('app_employe') }}" class="btn btn-secondary mb-3">
-    ← Retour au dashboard
-</a>
 <div class="container mt-5">
 
-    <h1 class="mb-4">Gestion des commandes</h1>
+<a href="{{ path('app_employe') }}" class="btn btn-secondary mb-4">
+    ← Retour au dashboard
+</a>
 
-    <!-- FILTRE -->
-    <form method="get" class="row mb-4">
+<h1 class="mb-4">Gestion des commandes</h1>
 
-        <div class="col-md-4">
-            <select name="statut" class="form-control">
-                <option value="">-- Filtrer par statut --</option>
-                <option value="accepte">Accepté</option>
-                <option value="en_preparation">En préparation</option>
-                <option value="en_livraison">En livraison</option>
-                <option value="livre">Livré</option>
-                <option value="retour_materiel">Retour matériel</option>
-                <option value="terminee">Terminée</option>
-                <option value="annulee">Annulée</option>
-            </select>
-        </div>
+<div class="alert alert-info">
+    📦 Nombre total de commandes : <strong>{{ commandes|length }}</strong>
+</div>
 
-        <div class="col-md-4">
-            <input type="text" name="client" class="form-control" placeholder="Nom du client">
-        </div>
+<!-- FILTRES -->
+<form method="get" class="row g-3 mb-4">
 
-        <div class="col-md-4">
-            <button class="btn btn-primary">Filtrer</button>
-        </div>
+    <div class="col-md-4">
+        <select name="statut" class="form-select">
+            <option value="">Filtrer par statut</option>
+            <option value="en_attente">En attente</option>
+            <option value="accepte">Accepté</option>
+            <option value="en_preparation">En préparation</option>
+            <option value="en_livraison">En livraison</option>
+            <option value="livre">Livré</option>
+            <option value="retour_materiel">Retour matériel</option>
+            <option value="terminee">Terminée</option>
+            <option value="annulee">Annulée</option>
+        </select>
+    </div>
 
-    </form>
+    <div class="col-md-4">
+        <input type="text" name="client" class="form-control" placeholder="Nom du client">
+    </div>
 
-    <!-- TABLE COMMANDES -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Client</th>
-                <th>Date</th>
-                <th>Statut</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="col-md-4">
+        <button class="btn btn-primary w-100">
+            🔎 Filtrer
+        </button>
+    </div>
 
-        {% for commande in commandes %}
-            <tr>
-                <td>{{ commande.id }}</td>
-                <td>{{ commande.nomClient }}</td>
-                <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
-                <td>{{ commande.statut }}</td>
-                <td>
-                    <a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}" class="btn btn-danger btn-sm">
-                        Annuler
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucune commande trouvée</td>
-            </tr>
-        {% endfor %}
+</form>
 
-        </tbody>
-    </table>
+<!-- TABLE -->
+<div class="table-responsive">
+
+<table class="table table-hover table-bordered align-middle">
+
+<thead class="table-dark">
+<tr>
+<th>ID</th>
+<th>Client</th>
+<th>Date</th>
+<th>Statut</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for commande in commandes %}
+
+<tr>
+
+<td>#{{ commande.id }}</td>
+
+<td>
+<strong>{{ commande.nomClient }}</strong>
+</td>
+
+<td>
+{{ commande.dateCommande|date('d/m/Y H:i') }}
+</td>
+
+<td>
+
+{% if commande.statut == 'en_attente' %}
+<span class="badge bg-secondary">⏳ En attente</span>
+
+{% elseif commande.statut == 'accepte' %}
+<span class="badge bg-success">✔ Accepté</span>
+
+{% elseif commande.statut == 'en_preparation' %}
+<span class="badge bg-warning text-dark">👨‍🍳 Préparation</span>
+
+{% elseif commande.statut == 'en_livraison' %}
+<span class="badge bg-info text-dark">🚚 Livraison</span>
+
+{% elseif commande.statut == 'livre' %}
+<span class="badge bg-primary">📦 Livré</span>
+
+{% elseif commande.statut == 'retour_materiel' %}
+<span class="badge bg-dark">♻ Retour matériel</span>
+
+{% elseif commande.statut == 'terminee' %}
+<span class="badge bg-success">✅ Terminée</span>
+
+{% elseif commande.statut == 'annulee' %}
+<span class="badge bg-danger">❌ Annulée</span>
+
+{% else %}
+<span class="badge bg-light text-dark">Non défini</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if commande.statut == 'en_attente' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'accepte'}) }}"
+class="btn btn-success btn-sm">
+✔ Accepter
+</a>
+{% endif %}
+
+{% if commande.statut == 'accepte' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'en_preparation'}) }}"
+class="btn btn-warning btn-sm">
+👨‍🍳 Préparer
+</a>
+{% endif %}
+
+{% if commande.statut == 'en_preparation' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'en_livraison'}) }}"
+class="btn btn-info btn-sm">
+🚚 Livraison
+</a>
+{% endif %}
+
+{% if commande.statut == 'en_livraison' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'livre'}) }}"
+class="btn btn-primary btn-sm">
+📦 Livré
+</a>
+{% endif %}
+
+{% if commande.statut == 'livre' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'retour_materiel'}) }}"
+class="btn btn-dark btn-sm">
+♻ Retour matériel
+</a>
+{% endif %}
+
+{% if commande.statut == 'retour_materiel' %}
+<a href="{{ path('app_employe_commande_statut', {id: commande.id, statut: 'terminee'}) }}"
+class="btn btn-success btn-sm">
+✅ Terminer
+</a>
+{% endif %}
+
+{% if commande.statut not in ['terminee','annulee'] %}
+<a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}"
+class="btn btn-danger btn-sm">
+❌ Annuler
+</a>
+{% endif %}
+
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="5" class="text-center">
+Aucune commande trouvée
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
 
 </div>
 

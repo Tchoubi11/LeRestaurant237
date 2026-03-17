@@ -4,16 +4,16 @@
 
 {% block body %}
 
-<div class="container mt-4">
+{% if is_granted('ROLE_ADMIN') %}
+<a href="{{ path('admin') }}" class="btn btn-secondary mb-3">
+    ← Retour au dashboard 
+</a>
 
-    {% if is_granted('ROLE_EMPLOYE') %}
-        <a href="{{ path('app_employe') }}" class="btn btn-secondary mb-4">
-            ← Retour au dashboard employé
-        </a>
-    {% endif %}
-
-</div>
-
+{% elseif is_granted('ROLE_EMPLOYE') %}
+<a href="{{ path('app_employe') }}" class="btn btn-secondary mb-3">
+    ← Retour au dashboard 
+</a>
+{% endif %}
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Nos Menus</h1>
 

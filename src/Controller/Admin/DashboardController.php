@@ -19,16 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
-    public function index(): Response
-    {
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-
-        return $this->redirect(
-            $adminUrlGenerator
-                ->setController(MenuCrudController::class)
-                ->generateUrl()
-        );
-    }
+public function index(): Response
+{
+    return $this->render('admin/dashboard.html.twig');
+}
 
     public function configureDashboard(): Dashboard
     {
@@ -49,7 +43,7 @@ class DashboardController extends AbstractDashboardController
     yield MenuItem::linkToCrud('Allergènes', 'fas fa-exclamation-triangle', Allergene::class)
         ->setController(AllergeneCrudController::class);
 
-    yield MenuItem::linkToRoute('Voir le site', 'fas fa-globe', 'app_menus');
+    yield MenuItem::linkToRoute('Voir le site', 'fas fa-globe', 'app_home');
 
     yield MenuItem::linkToCrud('Employés', 'fas fa-users', User::class);
 
