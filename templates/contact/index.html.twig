@@ -1,14 +1,42 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Contact{% endblock %}
+
 {% block body %}
-<h1>Contact</h1>
 
-<p>Pour toute demande, contactez-nous :</p>
+<div class="container mt-5">
 
-<ul>
-    <li>Email : contact@vitegourmand.fr</li>
-    <li>Téléphone : 05 00 00 00 00</li>
-    <li>Adresse : Bordeaux</li>
-</ul>
+<h1>Contactez-nous</h1>
+
+{% for message in app.flashes('success') %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+{% endfor %}
+
+{{ form_start(form, {'attr': {'aria-label': 'Formulaire de contact'}}) }}
+
+<div class="mb-3">
+    {{ form_label(form.titre) }}
+    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.email) }}
+    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<button class="btn btn-primary">
+    Envoyer
+</button>
+
+{{ form_end(form) }}
+
+</div>
 
 {% endblock %}
