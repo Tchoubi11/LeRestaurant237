@@ -17,21 +17,39 @@
 {{ form_start(form, {'attr': {'aria-label': 'Formulaire de contact'}}) }}
 
 <div class="mb-3">
-    {{ form_label(form.titre) }}
-    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.titre, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.titre, {
+        'attr': {
+            'class': 'form-control',
+            'aria-label': 'Titre du message'
+        }
+    }) }}
+    {{ form_errors(form.titre) }}
 </div>
 
 <div class="mb-3">
-    {{ form_label(form.email) }}
-    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.email, {
+        'attr': {
+            'class': 'form-control',
+            'aria-label': 'Adresse email'
+        }
+    }) }}
+    {{ form_errors(form.email) }}
 </div>
 
 <div class="mb-3">
-    {{ form_label(form.description) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.description, {
+        'attr': {
+            'class': 'form-control',
+            'aria-label': 'Description du message'
+        }
+    }) }}
+    {{ form_errors(form.description) }}
 </div>
 
-<button class="btn btn-primary">
+<button class="btn btn-primary" aria-label="Envoyer le message">
     Envoyer
 </button>
 

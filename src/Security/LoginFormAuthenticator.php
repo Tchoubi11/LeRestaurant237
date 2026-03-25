@@ -15,6 +15,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use App\Repository\UserRepository;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -22,25 +24,44 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
-    }
+   public function __construct(
+    private UrlGeneratorInterface $urlGenerator,
+    private UserRepository $userRepository
+)
+{
+}
 
     public function authenticate(Request $request): Passport
-    {
-        $email = $request->getPayload()->getString('email');
+{
+    $email = $request->getPayload()->getString('email');
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+    $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-        return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
-            [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
-                new RememberMeBadge(),
-            ]
-        );
-    }
+    return new Passport(
+        new UserBadge($email, function ($userIdentifier) {
+
+            $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
+
+            if (!$user) {
+                throw new CustomUserMessageAuthenticationException('Utilisateur introuvable');
+            }
+
+            // Ici je bloque le compte inactif
+            if (!$user->isActif()) {
+                throw new CustomUserMessageAuthenticationException('Compte désactivé');
+            }
+
+            return $user;
+        }),
+
+        new PasswordCredentials($request->getPayload()->getString('password')),
+
+        [
+            new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
+            new RememberMeBadge(),
+        ]
+    );
+}
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
 {
@@ -48,12 +69,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($targetPath);
     }
 
-    // 🔥 Si admin → redirige vers /admin
+    // Si admin je redirige vers /admin
     if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
         return new RedirectResponse($this->urlGenerator->generate('admin'));
     }
 
-    // Sinon → page d'accueil
+    // Sinon je redirige vers la page d'accueil
     return new RedirectResponse($this->urlGenerator->generate('app_home'));
 }
 

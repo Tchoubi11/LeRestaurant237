@@ -1,0 +1,154 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* NAVBAR */
+.navbar {
+    background: linear-gradient(90deg, #1e1e1e, #2c2c2c);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: #ffc107 !important;
+}
+
+/* HERO PREMIUM */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 140px 20px;
+    text-align: center;
+    border-radius: 0 0 30px 30px;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+/* BOUTON PREMIUM */
+.btn-gold {
+    background: linear-gradient(45deg, #ffc107, #ff9800);
+    border: none;
+    color: #000;
+    font-weight: 600;
+    padding: 12px 25px;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.btn-gold:hover {
+    transform: scale(1.05);
+}
+
+/* BUTTON CLASSIQUE */
+.btn-primary {
+    background-color: #e63946;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #c1121f;
+}
+
+/* TITRES */
+h1, h2 {
+    font-weight: 700;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    color: #777;
+}
+
+/* CARTES MODERNES */
+.info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+}
+
+/* CARTES GLOBALES */
+.card {
+    border-radius: 15px;
+}
+
+/* CARTE AVIS */
+.avis-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.avis-card:hover {
+    transform: translateY(-5px);
+}
+
+/* ICÔNES */
+.icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+/* ÉTOILES */
+.star {
+    color: #ccc;
+    font-size: 18px;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+/* FOOTER */
+footer {
+    background: #111;
+}
+
+footer h5 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+footer ul li {
+    margin-bottom: 6px;
+}
+
+footer a {
+    transition: 0.3s;
+}
+
+footer a:hover {
+    color: #ffc107 !important;
+}

@@ -3,74 +3,93 @@
 {% block body %}
 
 <!-- HERO SECTION -->
-<div class="hero">
-    <div class="container">
-        <h1>Vite & Gourmand</h1>
-        <p class="lead">Le goût authentique, rapidement.</p>
-        <a href="{{ path('app_menus') }}" class="btn btn-primary btn-lg mt-3">
-            Voir nos menus
+<section class="hero">
+    <div class="container text-center text-white">
+        <h1 class="hero-title">Vite & Gourmand</h1>
+        <p class="hero-subtitle">Le goût authentique, rapidement.</p>
+
+        <a href="{{ path('app_menus') }}" class="btn btn-gold btn-lg mt-4">
+            🍽 Découvrir nos menus
         </a>
     </div>
-</div>
+</section>
 
 <!-- INTRO -->
-<div class="container mt-5">
+<section class="container mt-5">
 
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">Bienvenue chez Vite & Gourmand</h1>
-        <p class="lead">25 ans d'expérience culinaire à Bordeaux</p>
+        <h2 class="section-title">Bienvenue chez Vite & Gourmand</h2>
+        <p class="section-subtitle">25 ans d'excellence culinaire à Bordeaux</p>
     </div>
 
-    <!-- ENTREPRISE -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="card-title">Notre entreprise</h2>
-            <p>
-                Depuis 25 ans à Bordeaux, Julie et José proposent
-                des menus gastronomiques pour tous vos événements.
-            </p>
+    <div class="row">
+
+        <!-- ENTREPRISE -->
+        <div class="col-md-6 mb-4">
+            <div class="info-card h-100">
+                <div class="icon">🏢</div>
+                <h3>Notre entreprise</h3>
+                <p>
+                    Depuis 25 ans à Bordeaux, Julie et José proposent
+                    des menus gastronomiques pour tous vos événements.
+                </p>
+            </div>
         </div>
+
+        <!-- PROFESSIONNALISME -->
+        <div class="col-md-6 mb-4">
+            <div class="info-card h-100">
+                <div class="icon">👨‍🍳</div>
+                <h3>Notre professionnalisme</h3>
+                <p>
+                    Une équipe passionnée, des produits frais,
+                    un service rapide et une qualité irréprochable.
+                </p>
+            </div>
+        </div>
+
     </div>
 
-    <!-- PROFESSIONNALISME -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="card-title">Notre professionnalisme</h2>
-            <p>
-                Une équipe passionnée, des produits frais,
-                un service rapide et de qualité.
-            </p>
-        </div>
-    </div>
+</section>
 
     <!-- AVIS CLIENTS -->
     <h2 class="mb-3">Avis clients</h2>
 
     <div class="row">
-        {% for avis in avis %}
-            <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-    {{ avis.user.prenom }} {{ avis.user.nom }}
-</h5>
+    {% for avis in avis %}
+        <div class="col-md-4 mb-4">
+            <div class="card avis-card h-100">
 
-<p class="card-text">
-    {{ avis.commentaire }}
-</p>
+                <div class="card-body">
 
-<small class="text-muted">
-    {{ avis.dateAvis|date('d/m/Y') }}
-</small>
-                        <span class="badge bg-success">Note : {{ avis.note }}/5</span>
+                    <h5 class="fw-bold">
+                        {{ avis.user.prenom }} {{ avis.user.nom }}
+                    </h5>
+
+                    <p class="text-muted small">
+                        {{ avis.dateAvis|date('d/m/Y') }}
+                    </p>
+
+                    <div class="mb-2">
+                        {% for i in 1..5 %}
+                            {% if i <= avis.note %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                </div>
-            </div>
-        {% else %}
-            <p>Aucun avis pour le moment.</p>
-        {% endfor %}
-    </div>
 
+                    <p class="mt-2">
+                        “{{ avis.commentaire }}”
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    {% endfor %}
+</div>
 </div>
 
 {% endblock %}
