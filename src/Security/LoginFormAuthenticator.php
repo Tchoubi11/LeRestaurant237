@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use App\Repository\UserRepository;
+use App\Service\MongoService;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -26,7 +27,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
    public function __construct(
     private UrlGeneratorInterface $urlGenerator,
-    private UserRepository $userRepository
+    private UserRepository $userRepository,
+    private MongoService $mongo
 )
 {
 }
@@ -40,20 +42,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     return new Passport(
         new UserBadge($email, function ($userIdentifier) {
 
-            $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
+    $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
 
-            if (!$user) {
-                throw new CustomUserMessageAuthenticationException('Utilisateur introuvable');
-            }
+    if (!$user) {
+        throw new CustomUserMessageAuthenticationException('Utilisateur introuvable');
+    }
 
-            // Ici je bloque le compte inactif
-            if (!$user->isActif()) {
-                throw new CustomUserMessageAuthenticationException('Compte désactivé');
-            }
+    //  Blocage UNIQUEMENT employés
+    if (in_array('ROLE_EMPLOYE', $user->getRoles()) && $user->isActif() !== true) {
+        throw new CustomUserMessageAuthenticationException('Compte employé désactivé');
+    }
 
-            return $user;
-        }),
-
+    return $user;
+}),
         new PasswordCredentials($request->getPayload()->getString('password')),
 
         [
@@ -65,19 +66,23 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
 {
+    //  LOG MONGO
+    $this->mongo->logAction(
+        $token->getUser()->getUserIdentifier(),
+        'login',
+        $request->getClientIp()
+    );
+
     if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
         return new RedirectResponse($targetPath);
     }
 
-    // Si admin je redirige vers /admin
     if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
         return new RedirectResponse($this->urlGenerator->generate('admin'));
     }
 
-    // Sinon je redirige vers la page d'accueil
     return new RedirectResponse($this->urlGenerator->generate('app_home'));
 }
-
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
