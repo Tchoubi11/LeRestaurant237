@@ -14,6 +14,7 @@
     ← Retour au dashboard 
 </a>
 {% endif %}
+
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Nos Menus</h1>
 
@@ -30,42 +31,23 @@
     </div>
 
     <div class="row" id="menu-container">
-
         {% for menu in menus %}
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
 
                     {% if menu.images|length > 0 %}
                         {% set firstImage = menu.images|first %}
-                        <img 
-                            src="{{ asset('uploads/menus/' ~ firstImage.url) }}" 
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover;"
-                            alt="{{ menu.titre }}"
-                        >
+                        <img src="{{ asset('uploads/menus/' ~ firstImage.url) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
                     {% else %}
-                        <img 
-                            src="{{ asset('images/default.jpg') }}" 
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover;"
-                            alt="Image par défaut"
-                        >
+                        <img src="{{ asset('images/default.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;">
                     {% endif %}
 
                     <div class="card-body">
-                        <h5 class="card-title">{{ menu.titre }}</h5>
+                        <h5>{{ menu.titre }}</h5>
+                        <p>{{ menu.description|striptags|slice(0,120) }}...</p>
+                        <p><strong>{{ menu.prix }} €</strong></p>
 
-                        <p class="card-text">
-                            {{ menu.description|striptags|slice(0,120) }}...
-                        </p>
-
-                        <p>
-                            <strong>{{ menu.nombrePersonnesMinimum }} personnes</strong><br>
-                            À partir de <strong>{{ menu.prix }} €</strong>
-                        </p>
-
-                        <a href="{{ path('app_menu_show', {id: menu.id}) }}" 
-                           class="btn btn-primary">
+                        <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn btn-primary">
                             Voir détail
                         </a>
                     </div>
@@ -75,65 +57,12 @@
         {% else %}
             <p class="text-center">Aucun menu disponible.</p>
         {% endfor %}
-
     </div>
 </div>
 
-<script>
-document.getElementById('priceFilter').addEventListener('change', function () {
+{% endblock %}
 
-    const maxPrice = this.value;
-
-    fetch('/menus/filter?maxPrice=' + maxPrice)
-        .then(response => response.json())
-        .then(data => {
-
-            let container = document.getElementById('menu-container');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = "<p class='text-center'>Aucun menu trouvé.</p>";
-                return;
-            }
-
-            data.forEach(menu => {
-
-                container.innerHTML += `
-                    <div class="col-md-4 mb-4">
-                        <div class="card shadow-sm h-100">
-
-                            <img 
-                                src="${menu.image ? '/uploads/menus/' + menu.image : '/images/default.jpg'}"
-                                class="card-img-top"
-                                style="height: 200px; object-fit: cover;"
-                                alt="Image"
-                            >
-
-                            <div class="card-body">
-                                <h5 class="card-title">${menu.titre}</h5>
-
-                                <p class="card-text">
-                                    ${menu.description.replace(/<[^>]*>/g, '').substring(0,120)}...
-                                </p>
-
-                                <p>
-                                    <strong>${menu.nombrePersonnesMinimum} personnes</strong><br>
-                                    À partir de <strong>${menu.prix} €</strong>
-                                </p>
-
-                                <a href="/menus/${menu.id}" 
-                                   class="btn btn-primary">
-                                    Voir détail
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-                `;
-            });
-
-        });
-});
-</script>
-
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/menu-filter.js') }}"></script>
 {% endblock %}
