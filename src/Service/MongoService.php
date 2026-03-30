@@ -11,7 +11,7 @@ class MongoService
     public function __construct()
     {
         
-        $client = new Client("mongodb://root:Tchoubaye237@localhost:27017/?authSource=admin");
+        $client = new Client("mongodb://127.0.0.1:27017");
 
         $db = $client->selectDatabase('mon_app');
         $this->collection = $db->selectCollection('logs');
